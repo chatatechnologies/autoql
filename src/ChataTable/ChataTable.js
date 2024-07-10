@@ -116,7 +116,7 @@ function instantiateTabulator(component, tableOptions, table) {
         tabulator.setHeaderInputEventListeners?.();
         tabulator.toggleFilters?.();
 
-        component.updateScrollSummaryFooter();
+        component.updateScrollSummaryFooter?.();
 
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);
