@@ -6,7 +6,6 @@ lefort_test/
 dist/
 lib/
 test/
-test_page/public
 test_page/node_modules
 test_node.js
 index.html

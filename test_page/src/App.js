@@ -129,7 +129,7 @@ class App extends React.Component {
                 dashboardNames: names,
                 activeDashboard: 0,
             });
-        });
+        }).catch(error => console.error(error))
     };
 
     setDMOption = (propName, e) => {
@@ -218,6 +218,10 @@ class App extends React.Component {
                 domain: getStoredProp('domain-url') || '',
                 apiKey: getStoredProp('api-key') || '',
             },
+            defaultOpen: false,
+            autoQLConfig: {
+                enableNotifications: true,
+            }
         });
     };
 
