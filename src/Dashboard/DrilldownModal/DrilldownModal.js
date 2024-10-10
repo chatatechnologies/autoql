@@ -1,6 +1,7 @@
-import { Modal } from '../../Modal';
 import Split from 'split.js';
-import { refreshDelegate, refreshTooltips } from '../../Tooltips';
+
+import { Modal } from '../../Modal';
+import { refreshTooltips } from '../../Tooltips';
 
 export function DrilldownModal(title, views = []) {
     var modal = new Modal(
@@ -18,11 +19,13 @@ export function DrilldownModal(title, views = []) {
                     cursor: 'row-resize',
                     onDragEnd: () => {
                         window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                        views.forEach((view) => view.redraw?.());
                     },
                 });
             }
         },
     );
+
     modal.chataModal.classList.add('chata-modal-full-height');
     modal.chataModal.style.width = '90vw';
     views.map((v) => modal.addView(v));

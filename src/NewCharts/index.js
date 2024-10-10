@@ -1,1 +1,0 @@
-export { ChataChartNew } from './ChataChartNew'

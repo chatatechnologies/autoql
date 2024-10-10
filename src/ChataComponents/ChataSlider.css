@@ -18,7 +18,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--autoql-vanilla-background-color-switch-input);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -31,7 +31,7 @@
     bottom: 3px;
     left: 3px;
     border-radius: 50%;
-    background: #fff;
+    background: var(--autoql-vanilla-background-color-switch-thumb);
     transition: all .2s;
 }
 

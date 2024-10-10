@@ -1,4 +1,10 @@
-import { DEFAULT_DATA_PAGE_SIZE, MAX_DATA_PAGE_SIZE, getRowNumberListForPopover, getThemeValue } from 'autoql-fe-utils';
+import {
+    DEFAULT_DATA_PAGE_SIZE,
+    MAX_DATA_PAGE_SIZE,
+    getAuthentication,
+    getRowNumberListForPopover,
+    getThemeValue,
+} from 'autoql-fe-utils';
 import { PopoverChartSelector } from './PopoverChartSelector';
 import { strings } from '../Strings';
 import { DATA_LIMIT_WARNING } from '../Svg';
@@ -25,8 +31,12 @@ export function ChartRowSelector(
             popover.close();
 
             onDataFetching();
+
             try {
-                const response = await json.queryFn({ pageSize: clickedPageSize });
+                const response = await json.queryFn({
+                    ...getAuthentication(options?.authentication),
+                    pageSize: clickedPageSize,
+                });
                 const newJson = response?.data;
                 if (newJson) {
                     newJson.queryFn = json.queryFn;

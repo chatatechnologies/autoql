@@ -5,7 +5,7 @@ import { createIcon, uuidv4 } from '../../Utils';
 import './Select.scss';
 
 export function Select({
-    options,
+    options = [],
     disabled = false,
     fullWidth = false,
     label,
@@ -21,9 +21,14 @@ export function Select({
 }) {
     this.ID = uuidv4();
 
+    this.select = document.createElement('div');
+    this.select.classList.add('autoql-vanilla-select-and-label');
+
+    this.select.selectedValue = initialValue;
+
     this.showPopover = () => {
         this.popover.show();
-        this.scrollToValue(this.selectedValue);
+        this.scrollToValue(this.select.selectedValue);
     };
 
     this.scrollToValue = (value) => {
@@ -39,10 +44,7 @@ export function Select({
     };
 
     this.createSelect = () => {
-        this.select = document.createElement('div');
-        this.select.classList.add('autoql-vanilla-select-and-label');
-
-        this.selectedValue = initialValue;
+        this.select.innerHTML = '';
 
         if (fullWidth) {
             this.select.classList.add('autoql-vanilla-select-full-width');
@@ -55,6 +57,7 @@ export function Select({
         if (label) {
             const inputLabel = document.createElement('div');
             inputLabel.classList.add('autoql-vanilla-input-label');
+            inputLabel.innerHTML = label;
             this.select.appendChild(inputLabel);
         }
 
@@ -64,6 +67,8 @@ export function Select({
 
         if (outlined) {
             selectElement.classList.add('outlined');
+        } else {
+            selectElement.classList.add('underlined');
         }
 
         if (size === 'small') {
@@ -80,17 +85,19 @@ export function Select({
         this.selectTextContent = selectTextContent;
         selectText.appendChild(selectTextContent);
 
-        this.select.setValue = (value) => {
-            const selectedValue = value ?? this.selectedValue;
+        this.select.setValue = (value, noCallback) => {
+            const selectedValue = value ?? this.select.selectedValue;
             const selectedOption = options.find((option) => option.value == selectedValue);
 
             if (!selectedOption) {
                 selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
                 selectTextContent.innerHTML = placeholder;
                 return;
+            } else {
+                selectTextContent.classList.remove('autoql-vanilla-select-text-placeholder');
             }
 
-            this.selectedValue = selectedOption.value;
+            this.select.selectedValue = selectedOption.value;
 
             if (selectedOption?.label || selectedOption?.value) {
                 selectTextContent.classList.add('autoql-vanilla-menu-item-value-title');
@@ -98,47 +105,53 @@ export function Select({
                 const label = selectedOption.label ?? selectedOption.value;
 
                 selectTextContent.innerHTML = '';
+
+                if (selectedOption.icon) {
+                    const icon = createIcon(selectedOption.icon);
+                    selectTextContent.appendChild(icon);
+                }
+
                 if (typeof label == 'object') {
-                    selectTextContent.innerHTML = '';
                     selectTextContent.appendChild(label);
                 } else {
-                    selectTextContent.innerHTML = `${label}`;
+                    const selectTextContentInnerSpan = document.createElement('span');
+                    selectTextContentInnerSpan.innerHTML = `${label}`;
+                    selectTextContent.appendChild(selectTextContentInnerSpan);
                 }
             } else {
                 selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
                 selectTextContent.innerHTML = placeholder;
             }
 
-            onChange(selectedOption);
+            if (!noCallback) {
+                onChange(selectedOption);
+            }
         };
-
-        this.select.setValue();
 
         if (showArrow) {
             const selectArrow = document.createElement('div');
             selectArrow.classList.add('autoql-vanilla-select-arrow');
 
             const selectArrowIcon = createIcon(CARET_DOWN_ICON);
-            selectArrow.appendChild(selectArrowIcon);
 
+            // Only allow clicks on the container - to place the popover in the correct position
+            selectArrow.style.pointerEvents = 'none';
+            selectArrowIcon.style.pointerEvents = 'none';
+
+            selectArrow.appendChild(selectArrowIcon);
             selectElement.appendChild(selectArrow);
         }
 
         selectElement.addEventListener('click', (e) => {
-            if (this.popover) {
-                this.popover = undefined;
-            } else {
-                this.popover = new PopoverChartSelector(e, position, align, 0);
-                this.popover.classList.add('autoql-vanilla-select-popover');
-                if (popoverClassName) this.popover.classList.add(popoverClassName);
-
-                const selectorContent = this.createPopoverContent();
-
-                this.popover.appendContent(selectorContent);
-
-                this.showPopover();
-            }
+            this.popover = new PopoverChartSelector(e, position, align, 0);
+            this.popover.classList.add('autoql-vanilla-select-popover');
+            if (popoverClassName) this.popover.classList.add(popoverClassName);
+            const selectorContent = this.createPopoverContent();
+            this.popover.appendContent(selectorContent);
+            this.showPopover();
         });
+
+        this.select.setValue(this.select.selectedValue);
     };
 
     this.createPopoverContent = () => {
@@ -154,7 +167,11 @@ export function Select({
             li.classList.add('autoql-vanilla-select-list-item');
             li.id = `select-option-${this.ID}-${i}`;
 
-            if (option.value == this.selectedValue) {
+            if (option.disabled) {
+                li.classList.add('autoql-vanilla-disabled');
+            }
+
+            if (option.value == this.select.selectedValue) {
                 li.classList.add('active');
             }
 
@@ -166,10 +183,21 @@ export function Select({
 
             const listLabel = option?.listLabel ?? option?.label ?? option?.value;
 
-            if (typeof listLabel == 'object') {
-                li.appendChild(listLabel);
-            } else {
-                li.innerHTML = listLabel;
+            if (option.icon) {
+                const icon = createIcon(option.icon);
+                li.appendChild(icon);
+            }
+
+            const listLabelSpan = document.createElement('span');
+            listLabelSpan.innerHTML = listLabel;
+
+            li.appendChild(listLabelSpan);
+
+            if (option.subtitle) {
+                const subtitle = document.createElement('div');
+                subtitle.classList.add('select-option-menu-item-value-subtitle');
+                subtitle.innerHTML = option.subtitle;
+                li.appendChild(subtitle);
             }
 
             selectorContent.appendChild(li);

@@ -1,172 +1,73 @@
-import { dataFormattingDefault, formatElement, isChartType, isDataLimited } from 'autoql-fe-utils';
-import './NotificationDataContainer.scss';
+import { isSingleValueResponse } from 'autoql-fe-utils';
+
 import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
-import { ChataTable } from '../../../../ChataTable';
 import { NotificationVizToolbar } from '../NotificationVizToolbar';
 import { DataLimitWarningIcon } from '../../../../DataLimitWarningIcon';
-import { ChataChartNew } from '../../../../NewCharts';
+import { QueryOutput } from '../../../../QueryOutput';
+
+import './NotificationDataContainer.scss';
 
 export function NotificationDataContainer({ queryResponse, widgetOptions }) {
-  const container = document.createElement('div');
-  const wrapper = document.createElement('div');
-  const responseContentContainer = document.createElement('div');
-  this.idRequest = uuidv4();
-  ChataUtils.responses[this.idRequest] = queryResponse.data;
+    const container = document.createElement('div');
+    const wrapper = document.createElement('div');
+    const responseContentContainer = document.createElement('div');
+    this.idRequest = uuidv4();
+    ChataUtils.responses[this.idRequest] = queryResponse.data;
 
-  responseContentContainer.classList.add('autoql-vanilla-response-content-container');
-  wrapper.classList.add('autoql-vanilla-notification-chart-container');
-  container.classList.add('autoql-vanilla-notification-data-container');
- 
-  this.createDataResponse = () => {
-    const responseContainer = document.createElement('div');
-    const singleValue = document.createElement('div');
-    const queryContainer = document.createElement('span');
-    const queryWrapper = document.createElement('strong');
-    const {
-      text,
-      columns,
-      rows,
-    } = queryResponse?.data?.data
+    responseContentContainer.classList.add('autoql-vanilla-response-content-container');
+    wrapper.classList.add('autoql-vanilla-notification-chart-container');
+    container.classList.add('autoql-vanilla-notification-data-container');
 
-    queryWrapper.textContent = text;
+    this.createVizToolbar = () => {
+        return new NotificationVizToolbar({
+            response: queryResponse,
+            notificationItem: this,
+        });
+    };
 
-    queryContainer.appendChild(queryWrapper)
-    queryContainer.appendChild(document.createTextNode(': '));
-    singleValue.appendChild(queryContainer);
-    singleValue.appendChild(document.createTextNode(formatElement({
-      element: rows[0][0],
-      column: columns[0],
-    })));
-    responseContainer.appendChild(singleValue);
+    this.handleFilterClick = () => {
+        this.queryOutput?.toggleTableFiltering();
+    };
 
-    singleValue.classList.add('autoql-vanilla-single-value-response');
-    responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
-    return responseContainer;
-  }
+    this.showDataLimitWarning = () => {
+        return queryResponse?.data?.data?.rows?.length >= 500;
+    };
 
-  this.createVizToolbar = () => {
-    return new NotificationVizToolbar({
-      response: queryResponse,
-      notificationItem: this,
-    });
-  }
+    this.showResponse = (displayType) => {
+        const queryOuptut = new QueryOutput(responseContentContainer, {
+            authentication: widgetOptions.authentication,
+            displayType,
+            height: 300,
+            queryResponse: queryResponse?.data,
+            showSingleValueResponseTitle: true,
+            useInfiniteScroll: false,
+        });
 
-  this.handleFilterClick = () => {
-    this.tabulator.toggleFilters();
-  }
- 
-  this.createTable = () => {
-    var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
-    const table = new ChataTable(
-      this.idRequest,
-      { options: dataFormattingDefault },
-      () => {},
-      () => {},
-      useInfiniteScroll,
-      undefined,
-    );
+        this.queryOutput = queryOuptut;
+    };
 
-    this.tabulator = table;
-  }
-
-  this.createChartContainer = () => {
-    var chartContainer = document.createElement('div');
-    chartContainer.classList.add('autoql-vanilla-chart-container');
-
-    return chartContainer;
-  }
-  
-  this.createTableResponseContainer = () => {
-    var tableContainer = document.createElement('div');
-    var tableWrapper = document.createElement('div');
-
-    tableWrapper.setAttribute('data-componentid', this.idRequest);
-    tableWrapper.classList.add('autoql-vanilla-chata-table');
-    tableContainer.classList.add('autoql-vanilla-chata-table-container');
-
-    tableContainer.appendChild(tableWrapper);
-
-    return tableContainer;
-  }
-
-  this.isSingleResponse = () => {
-    const {
-      columns
-    } = queryResponse?.data?.data;
-
-    return columns.length === 1;
-  }
-
-  this.showDataLimitWarning = () => {
-    return queryResponse?.data?.data?.rows?.length >= 500;
-  }
-
-  this.initializeContainers = () => {
-    if(!this.isSingleResponse()) {
-      this.tableContainer = this.createTableResponseContainer();
-      this.chartContainer = this.createChartContainer();
-    
-      this.chartContainer.classList.add('autoql-vanilla-hidden');
-    
-      responseContentContainer.appendChild(this.tableContainer);
-      responseContentContainer.appendChild(this.chartContainer);
-      if(this.showDataLimitWarning()) {
-        responseContentContainer.appendChild(this.createFooter());
-      }
-    }  
-  }
-
-  this.showResponse = (displayType) => {
-    switch(displayType) {
-      case 'data':
-      case 'table':
-      if(this.isSingleResponse()) {
-        responseContentContainer.appendChild(this.createDataResponse());
-      } else {
-        this.chartContainer.classList.add('autoql-vanilla-hidden');
-        this.tableContainer.classList.remove('autoql-vanilla-hidden');
-        this.createTable();
-      }
-      break;
-    }
-    
-    if(isChartType(displayType)) {
-      this.tableContainer.classList.add('autoql-vanilla-hidden');
-      this.chartContainer.classList.remove('autoql-vanilla-hidden');
-
-      new ChataChartNew(this.chartContainer, {
-        type: displayType,
-        queryJson: queryResponse?.data,
-        onChartClick: () => { },
-        options: widgetOptions,
-      });
-    }
-  }
-    
     this.createFooter = () => {
-      const footer = document.createElement('div');
-      
-      footer.classList.add('autoql-vanilla-output-footer');
-      footer.appendChild(new DataLimitWarningIcon());
-      
-      return footer;
-  }
+        const footer = document.createElement('div');
 
-  const displayType = queryResponse.data.data.display_type;
-  
-  wrapper.appendChild(responseContentContainer);
-  container.appendChild(wrapper);
-  
-  this.initializeContainers();
-  
-  setTimeout(() => {
-    this.showResponse(displayType);
-  }, 100);
+        footer.classList.add('autoql-vanilla-output-footer');
+        footer.appendChild(new DataLimitWarningIcon());
 
-  if(!this.isSingleResponse()){
-    wrapper.appendChild(this.createVizToolbar());
-  }
+        return footer;
+    };
 
-  return container;
+    const displayType = queryResponse.data.data.display_type;
+
+    wrapper.appendChild(responseContentContainer);
+    container.appendChild(wrapper);
+
+    setTimeout(() => {
+        this.showResponse(displayType);
+    }, 100);
+
+    if (!isSingleValueResponse(queryResponse)) {
+        wrapper.appendChild(this.createVizToolbar());
+    }
+
+    return container;
 }

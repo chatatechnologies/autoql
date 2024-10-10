@@ -1,143 +1,165 @@
-import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog/ChataConfirmDialog";
-import { Modal } from "../../../../Modal";
+import { updateDataAlert } from 'autoql-fe-utils';
+
+import { Modal } from '../../../../Modal';
+import { AntdMessage } from '../../../../Antd';
+import { ConditionsStep } from '../DataAlertCreationModal/ConditionsStep';
+import { TimingStep } from '../DataAlertCreationModal/TimingStep/TimingStep';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
+import { AppearanceStep } from '../DataAlertCreationModal/AppearanceStep/AppearanceStep';
+
 import './DataAlertEditModal.scss';
-import { ConditionsView } from "../ConditionsView/ConditionsView";
-import { TimingView } from "../TimingView";
-import { AppearanceView } from "../AppearanceView";
-import { updateDataAlert } from "autoql-fe-utils";
-import { AntdMessage } from "../../../../Antd";
 
-export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication }) {
-  const btnDelete = document.createElement('button');
-  const btnCancel = document.createElement('button');
-  const btnSave = document.createElement('button');
-  const modalFooter = document.createElement('div');
-  const buttonContainerRight = document.createElement('div');
-  const buttonContainerLeft = document.createElement('div');
-  const spinner = document.createElement('div');
-  const container = document.createElement('div');
-  const btnSaveString = document.createElement('span');
-  
-  const conditionsView = new ConditionsView({ dataAlert });
-  const timingView = new TimingView({ dataAlert });
-  const appearanceView = new AppearanceView({ dataAlert });
+const createSectionTitle = (title) => {
+    const sectionTitle = document.createElement('div');
+    sectionTitle.classList.add('autoql-vanilla-data-alert-setting-section-title');
+    sectionTitle.innerHTML = title;
+    return sectionTitle;
+};
 
-  container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
-  spinner.classList.add('autoql-vanilla-spinner-loader');
-  spinner.classList.add('hidden');
+const SectionDivider = () => {
+    const divider = document.createElement('div');
+    divider.classList.add('autoql-vanilla-divider-horizontal');
+    return divider;
+};
 
-  btnCancel.textContent = 'Cancel';
-  btnCancel.classList.add('autoql-vanilla-chata-btn');
-  btnCancel.classList.add('autoql-vanilla-large');
-  btnCancel.classList.add('autoql-vanilla-default');
-  btnCancel.classList.add('autoql-vanilla-btn-no-border');
+export function DataAlertEditModal({
+    dataAlertItem,
+    dataAlert,
+    authentication,
+    onDeleteClick = () => {},
+    fetchAlerts = () => {},
+}) {
+    const btnDelete = document.createElement('button');
+    const btnCancel = document.createElement('button');
+    const btnSave = document.createElement('button');
+    const modalFooter = document.createElement('div');
+    const buttonContainerRight = document.createElement('div');
+    const buttonContainerLeft = document.createElement('div');
+    const spinner = document.createElement('div');
+    const container = document.createElement('div');
+    const btnSaveString = document.createElement('span');
 
-  btnDelete.textContent = 'Delete Data Alert';
-  btnDelete.classList.add('autoql-vanilla-chata-btn');
-  btnDelete.classList.add('autoql-vanilla-large');
-  btnDelete.classList.add('autoql-vanilla-danger');
+    const conditionsSection = new ConditionsStep({ dataAlert });
+    const timingSection = new TimingStep({ dataAlert, showSummaryMessage: false });
+    const appearanceSection = new AppearanceStep({ dataAlert, showSummaryMessage: false });
 
-  btnSave.appendChild(spinner);
-  btnSave.appendChild(btnSaveString);
-  btnSaveString.textContent = 'Save Changes';
-  btnSaveString.classList.add('autoql-vanilla-btn-text-wrapper');
-  btnSave.classList.add('autoql-vanilla-chata-btn');
-  btnSave.classList.add('autoql-vanilla-large');
-  btnSave.classList.add('autoql-vanilla-primary');
+    container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
+    spinner.classList.add('autoql-vanilla-spinner-loader');
+    spinner.classList.add('hidden');
 
-  modalFooter.classList.add('autoql-vanilla-modal-footer');
+    btnCancel.textContent = 'Cancel';
+    btnCancel.classList.add('autoql-vanilla-chata-btn');
+    btnCancel.classList.add('autoql-vanilla-large');
+    btnCancel.classList.add('autoql-vanilla-default');
+    btnCancel.classList.add('autoql-vanilla-btn-no-border');
 
-  buttonContainerLeft.appendChild(btnDelete);
-  buttonContainerRight.appendChild(btnCancel);
-  buttonContainerRight.appendChild(btnSave);
-  
-  modalFooter.appendChild(buttonContainerLeft);
-  modalFooter.appendChild(buttonContainerRight);
+    btnDelete.textContent = 'Delete Data Alert';
+    btnDelete.classList.add('autoql-vanilla-chata-btn');
+    btnDelete.classList.add('autoql-vanilla-large');
+    btnDelete.classList.add('autoql-vanilla-danger');
 
-  const confirmDialogProps = {
-    title: 'Are you sure you want to leave this page?',
-    message: 'All unsaved changes will be lost.',
-    onDiscard: () => {
-      modal.closeAnimation();
-      setTimeout(() => {
-          modal.hideContainer();
-      }, 250);
-    }
-  }
+    btnSave.appendChild(spinner);
+    btnSave.appendChild(btnSaveString);
+    btnSaveString.textContent = 'Save Changes';
+    btnSaveString.classList.add('autoql-vanilla-btn-text-wrapper');
+    btnSave.classList.add('autoql-vanilla-chata-btn');
+    btnSave.classList.add('autoql-vanilla-large');
+    btnSave.classList.add('autoql-vanilla-primary');
 
-  const onDiscard = () => {
-    new ChataConfirmDialog({ ...confirmDialogProps });
-  }
+    modalFooter.classList.add('autoql-vanilla-modal-footer');
 
-  var modal = new Modal(
-    {
-        withFooter: true,
-        destroyOnClose: true,
-    },
-    () => {},
-    onDiscard
-  );
-  
-  const deleteDataAlertItemHandler = () => {
-    ChataConfirmDialog({
-      title: 'Are you sure you want to delete this Data Alert?',
-      message: 'You will no longer be notified about these changes in your data.',
-      cancelString: 'Go Back',
-      discardString: 'Delete',
-      onDiscard: async () => {
-        const response = await deleteDataAlert(id, authentication);
-        if(response.status === 200) {
-          new AntdMessage('Data Alert was successfully deleted.', 3000);
-        } else {
-          new AntdMessage('Error', 3000);
-        }
+    buttonContainerLeft.appendChild(btnDelete);
+    buttonContainerRight.appendChild(btnCancel);
+    buttonContainerRight.appendChild(btnSave);
+
+    modalFooter.appendChild(buttonContainerLeft);
+    modalFooter.appendChild(buttonContainerRight);
+
+    const confirmDialogProps = {
+        title: 'Are you sure you want to leave this page?',
+        message: 'All unsaved changes will be lost.',
+        onDiscard: () => {
+            modal.closeAnimation();
+            setTimeout(() => {
+                modal.hideContainer();
+            }, 250);
+        },
+    };
+
+    const onDiscard = () => {
+        new ChataConfirmDialog({ ...confirmDialogProps });
+    };
+
+    var modal = new Modal(
+        {
+            withFooter: true,
+            destroyOnClose: true,
+        },
+        () => {},
+        onDiscard,
+    );
+
+    const deleteDataAlertItemHandler = async () => {
+        await onDeleteClick();
         modal.close();
-      }
-    })
-  }
+    };
 
-  btnCancel.onclick = onDiscard;
-  btnDelete.onclick = deleteDataAlertItemHandler;
+    btnCancel.onclick = onDiscard;
+    btnDelete.onclick = deleteDataAlertItemHandler;
 
-  btnSave.onclick = async () => {
-    spinner.classList.remove('hidden');
-    btnSave.setAttribute('disabled', 'true');
-    const newValues = {
-      data_return_query: dataAlert.data_return_query,
-      id: dataAlert.id,
-      ...conditionsView.getValues(),
-      ...appearanceView.getValues(),
-      ...timingView.getValues(),
-    }
-    const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
-    modal.close();
-    if(response.status === 200) {
-      new AntdMessage('Data Alert updated!', 2500);
-      if(!dataAlertItem) {
-        dataAlertItem.setDataAlert(response.data.data);
-      }
-    }else {
-      new AntdMessage('Error', 2500);
-    }
-  }
+    btnSave.onclick = async () => {
+        spinner.classList.remove('hidden');
+        btnSave.setAttribute('disabled', 'true');
+        const newValues = {
+            id: dataAlert.id,
+            ...conditionsSection.getValues(),
+            ...appearanceSection.getValues(),
+            ...timingSection.getValues(),
+        };
+        try {
+            const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
+            await fetchAlerts();
 
-  container.addEventListener('keyup', () => {
-    if(!conditionsView.isValid() || !appearanceView.isValid()) {
-      btnSave.disabled = true;
-      btnSave.classList.add('autoql-vanilla-disabled');
-    } else {
-      btnSave.classList.remove('autoql-vanilla-disabled');
-      btnSave.disabled = false;
-    }
-  })
+            if (response.status === 200) {
+                dataAlertItem?.setDataAlert?.(response?.data?.data);
+                modal.close();
+                new AntdMessage('Data Alert updated!', 2500);
+            } else {
+                throw new Error('There was a problem saving your Data Alert. Please try again.');
+            }
+        } catch (error) {
+            console.error(error);
+            new AntdMessage('Error', 2500);
+        }
+    };
 
-  container.appendChild(conditionsView);
-  container.appendChild(timingView);
-  container.appendChild(appearanceView);
-  modal.addView(container);
-  modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
-  modal.setTitle('Edit Data Alert Settings');
-  modal.addFooterElement(modalFooter);
+    container.addEventListener('keyup', () => {
+        if (!conditionsSection.isValid() || !appearanceSection.isValid()) {
+            btnSave.disabled = true;
+            btnSave.classList.add('autoql-vanilla-disabled');
+        } else {
+            btnSave.classList.remove('autoql-vanilla-disabled');
+            btnSave.disabled = false;
+        }
+    });
 
-  return modal;
+    const conditionsSectionTitle = createSectionTitle('Conditions');
+    const timingSectionTitle = createSectionTitle('Timing');
+    const appearanceSectionTitle = createSectionTitle('Appearance');
+
+    container.appendChild(conditionsSectionTitle);
+    container.appendChild(conditionsSection);
+    container.appendChild(new SectionDivider());
+    container.appendChild(timingSectionTitle);
+    container.appendChild(timingSection);
+    container.appendChild(new SectionDivider());
+    container.appendChild(appearanceSectionTitle);
+    container.appendChild(appearanceSection);
+
+    modal.addView(container);
+    modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
+    modal.setTitle('Edit Data Alert Settings');
+    modal.addFooterElement(modalFooter);
+
+    return modal;
 }

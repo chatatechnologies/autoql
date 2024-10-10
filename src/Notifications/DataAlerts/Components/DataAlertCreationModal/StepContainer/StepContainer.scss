@@ -1,0 +1,109 @@
+.autoql-vanilla-steps-hoz-container {
+    padding: 0px 100px;
+    padding-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    font-family: inherit;
+    flex-direction: row;
+
+    .autoql-vanilla-step-hoz-container {
+        flex: 1 1;
+        position: relative;
+        padding-left: 8px;
+        padding-right: 8px;
+
+        .autoql-vanilla-step-connector-container {
+            top: calc(1em - 0.5px);
+            left: calc(-50% + 2em - 8px);
+            right: calc(50% + 2em - 8px);
+            position: absolute;
+            .autoql-vanilla-step-connector {
+                display: block;
+                border-top: 1px solid;
+            }
+        }
+
+        &.autoql-vanilla-complete,
+        &.autoql-vanilla-active {
+            .autoql-vanilla-step-connector {
+                border-color: var(--autoql-vanilla-accent-color);
+                background: var(--autoql-vanilla-accent-color);
+                color: var(--autoql-vanilla-text-color-accent);
+            }
+
+            .autoql-vanilla-step-hoz {
+                color: var(--autoql-vanilla-accent-color);
+                .autoql-vanilla-step-hoz-dot {
+                    border-color: var(--autoql-vanilla-accent-color);
+                    background: var(--autoql-vanilla-accent-color);
+                    color: var(--autoql-vanilla-text-color-accent);
+                }
+            }
+        }
+
+        &.autoql-vanilla-disabled {
+            pointer-events: none;
+
+            .autoql-vanilla-step-connector {
+                cursor: default !important;
+                color: var(--autoql-vanilla-text-color-placeholder);
+                border-color: var(--autoql-vanilla-text-color-placeholder);
+            }
+
+            .autoql-vanilla-step-hoz {
+                .autoql-vanilla-step-hoz-dot {
+                    cursor: default !important;
+                    color: var(--autoql-vanilla-text-color-placeholder);
+                    border-color: var(--autoql-vanilla-text-color-placeholder);
+                }
+
+                .autoql-vanilla-step-hoz-title-container {
+                    .autoql-vanilla-step-hoz-title {
+                        cursor: default !important;
+                        color: var(--autoql-vanilla-text-color-placeholder);
+                        border-color: var(--autoql-vanilla-text-color-placeholder);
+                    }
+                }
+            }
+        }
+
+        .autoql-vanilla-step-hoz {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            .autoql-vanilla-step-hoz-dot {
+                width: 2em;
+                border: none;
+                cursor: pointer;
+                height: 2em;
+                margin: 0;
+                display: flex;
+                padding: 0;
+                font-size: 1em;
+                align-items: center;
+                border-radius: 50%;
+                justify-content: center;
+                background: var(--autoql-vanilla-background-color-secondary);
+                border: 1px solid var(--autoql-vanilla-accent-color);
+                color: var(--autoql-vanilla-accent-color);
+                transition: opacity 0.2s ease;
+            }
+
+            .autoql-vanilla-step-hoz-title-container {
+                width: 100%;
+                font-size: 0.875rem;
+                font-weight: 400;
+                line-height: 1.4;
+
+                .autoql-vanilla-step-hoz-title {
+                    display: block;
+                    margin-top: 16px;
+                    text-align: center;
+                    color: var(--autoql-vanilla-accent-color);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

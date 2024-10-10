@@ -22,7 +22,7 @@ import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 import { CSS_PREFIX } from '../Constants';
-import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
+import { DataAlertCreationModal } from '../Notifications/DataAlerts/Components/DataAlertCreationModal';
 
 import '../../css/PopoverMenu.css';
 
@@ -152,34 +152,40 @@ ChataUtils.onCSVDownloadProgress = ({ id, progress }) => {
     csvDownloadingMessage.textContent = `${strings.downloadingCSV} ... ${progress}%`;
 };
 
-ChataUtils.onCSVDownloadFinish = ({ caller, error, exportLimit, limitReached, queryText }) => {
+ChataUtils.onCSVDownloadFinish = ({ caller, error, exportLimit, limitReached, queryText } = {}) => {
     if (error) {
-        return caller.sendResponse(error, true);
+        return caller?.sendResponse(error, true);
     }
-    caller.sendResponse(
-        `    <div>
-         ${strings.downloadedCSVSuccessully}${' '}
-          <b><i>${queryText}</i></b>.
-          ${
-              limitReached
-                  ? `<div>
-              <p>
-                <br />
-                ${strings.downloadedCSVWarning} ${exportLimit}
-                MB. ${strings.partialCSVDataWarning}
-              </p>
-            <div/>`
-                  : ''
-          }
-        <div/>`,
-        true,
-    );
+
+    if (caller) {
+        caller.sendResponse?.(
+            `    <div>
+             ${strings.downloadedCSVSuccessully}${' '}
+              <b><i>${queryText}</i></b>.
+              ${
+                  limitReached
+                      ? `<div>
+                  <p>
+                    <br />
+                    ${strings.downloadedCSVWarning} ${exportLimit}
+                    MB. ${strings.partialCSVDataWarning}
+                  </p>
+                <div/>`
+                      : ''
+              }
+            <div/>`,
+            true,
+        );
+    } else {
+        new AntdMessage(strings.downloadedCSVSuccessully, 3000);
+    }
 };
+
 ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
     try {
         var uuid = uuidv4();
-        var options = extraParams.caller.options;
-        var caller = extraParams.caller;
+        var options = extraParams?.caller?.options ?? {};
+        var caller = extraParams?.caller;
         ChataUtils.onCSVDownloadStart(caller);
         var json = ChataUtils.responses[idRequest];
         var queryId = json['data']['query_id'];
@@ -285,6 +291,12 @@ ChataUtils.copyHandler = (idRequest) => {
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+        if (!component) {
+            console.error('Could not find component containing the chart.');
+            return;
+        }
+
         var svg = component.querySelector('svg.autoql-vanilla-chart-svg');
 
         if (!svg) {
@@ -313,7 +325,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     const queryResponse = ChataUtils.responses[idRequest];
     const { options } = extraParams.caller;
 
-    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication, options });
     modal.show();
 };
 
@@ -412,7 +424,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                 );
                 action.classList.add('autoql-vanilla-notification-option');
                 menu.ul.appendChild(action);
-                if (!extraParams.caller.options.enableNotificationsTab) {
+                if (!extraParams?.caller?.options?.enableNotificationsTab) {
                     action.style.display = 'none';
                 }
                 break;
@@ -442,7 +454,7 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
         buttonTooltip.disable();
     }
     button.onclick = (evt) => {
-        onClick.apply(null, [evt, idRequest, ...evtParams]);
+        onClick?.apply?.(null, [evt, idRequest, ...evtParams]);
     };
 
     return button;
@@ -578,7 +590,7 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     modal.show();
 };
 
-ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
+ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}, queryOutput) => {
     var modal = new Modal({
         destroyOnClose: true,
         withFooter: true,
@@ -709,6 +721,11 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         var opts = options;
         var inputs = container.querySelectorAll('[data-line]');
         var table = document.querySelector(`[data-componentid='${id}']`);
+
+        if (queryOutput) {
+            table = { tabulator: queryOutput.table };
+        }
+
         var tableColumns = table.tabulator.getColumns();
 
         const data = tableColumns.map((col, i) => {
@@ -731,7 +748,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         modal.close();
 
         allColHiddenMessage(table);
-        onHideCols();
+        onHideCols(newColumnDefinitions);
 
         table.tabulator.restoreRedraw();
     };

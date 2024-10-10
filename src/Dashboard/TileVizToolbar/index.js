@@ -1,3 +1,0 @@
-export {
-    TileVizToolbar
-} from './TileVizToolbar'

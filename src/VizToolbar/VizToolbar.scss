@@ -1,0 +1,60 @@
+.autoql-vanilla-tile-toolbar.second {
+    left: 54px;
+}
+
+.autoql-vanilla-tile-toolbar.first.is-split {
+    left: 5px;
+}
+
+.autoql-vanilla-tile-toolbar {
+    display: flex;
+    z-index: 1000;
+    padding: 5px;
+    border-radius: 6px;
+    line-height: 28px;
+    z-index: 10;
+    bottom: 5px;
+    left: 5px;
+
+    -webkit-transition: opacity 0.3s ease, color 0.3s ease;
+    transition: opacity 0.3s ease, color 0.3s ease;
+    visibility: hidden;
+    opacity: 0;
+
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-secondary);
+
+    .autoql-vanilla-chata-toolbar-btn {
+        height: 28px;
+        width: 28px;
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: none !important;
+        border: none !important;
+        outline: none !important;
+        font-size: 16px;
+        color: var(--autoql-vanilla-text-color-primary);
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.7;
+        }
+
+        &.autoql-vanilla-viz-toolbar-btn-active {
+            color: var(--autoql-vanilla-accent-color, #28a8e0);
+        }
+    }
+}
+
+.autoql-vanilla-chata-icon svg {
+    height: 1em;
+    margin-bottom: -0.1em;
+}
+
+.autoql-vanilla-split-view-btn {
+    margin-right: 5px;
+}

@@ -1,20 +1,4 @@
-import { ChataUtils } from '../../ChataUtils';
-import { apiCall, apiCallGet, apiCallPut } from '../../Api';
-import { ChataTable, ChataPivotTable } from '../../ChataTable';
-import { ChataPopover } from '../../ChataComponents';
-import { ErrorMessage } from '../../ErrorMessage';
-import { DrilldownModal } from '../DrilldownModal';
-import { DrilldownView } from '../DrilldownView';
-import { select } from 'd3-selection';
-import { refreshTooltips } from '../../Tooltips';
-import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
-import { TileVizToolbar } from '../TileVizToolbar';
-import { ActionToolbar } from '../ActionToolbar';
-import { InputToolbar } from '../InputToolbar';
-import { strings } from '../../Strings';
-import { ChataChartNew } from '../../NewCharts';
 import {
-    CHART_TYPES,
     DEFAULT_DATA_PAGE_SIZE,
     constructFilter,
     getAuthentication,
@@ -26,27 +10,43 @@ import {
     runDrilldown,
     runQuery,
     getSupportedDisplayTypes,
+    isChartType,
 } from 'autoql-fe-utils';
+
+import { ChataUtils } from '../../ChataUtils';
+import { apiCall, apiCallGet, apiCallPut } from '../../Api';
+import { ErrorMessage } from '../../ErrorMessage';
+import { DrilldownModal } from '../DrilldownModal';
+import { DrilldownView } from '../DrilldownView';
+import { select } from 'd3-selection';
+import { refreshTooltips } from '../../Tooltips';
+import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
+import { InputToolbar } from '../InputToolbar';
+import { QueryOutput } from '../../QueryOutput/QueryOutput';
+import { strings } from '../../Strings';
+import { OptionsToolbar } from '../../OptionsToolbar';
+import { VizToolbar } from '../../VizToolbar';
+
 import {
     uuidv4,
-    createTableContainer,
-    formatData,
-    closeAllToolbars,
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
     getRecommendationPath,
     htmlToElement,
-    getGroupables,
     showBadge,
 } from '../../Utils';
 
 import './TileView.scss';
+import { SPLIT_VIEW, SPLIT_VIEW_ACTIVE } from '../../Svg';
 
-export function TileView(tile, isSecond = false) {
+export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
     var view = document.createElement('div');
     var responseWrapper = document.createElement('div');
+
     responseWrapper.classList.add('autoql-vanilla-tile-response-wrapper');
+    responseWrapper.classList.add(`autoql-vanilla-tile-response-wrapper-${isSecond ? 'second' : 'first'}`);
+
     view.appendChild(responseWrapper);
     const { dashboard } = tile;
     view.isSecond = isSecond;
@@ -93,48 +93,20 @@ export function TileView(tile, isSecond = false) {
 
     responseWrapper.innerHTML = placeHolderText;
 
-    view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
-        closeAllToolbars();
-        var popover = new ChataPopover(toolbar, toolbar.reportProblemButton);
-        popover.appendChild(reportProblem);
-        popover.show();
-    };
-
-    view.makeMoreOptions = () => {};
-
-    view.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
-        closeAllToolbars();
-        var popover = new ChataPopover(toolbar, toolbar.moreOptionsBtn);
-        var opts = ChataUtils.makeMoreOptionsMenu(idRequest, popover, moreOptions, {
-            caller: dashboard,
-            query: view.getQuery(),
-        });
-        popover.appendChild(opts);
-        popover.show();
-    };
-
     view.openColumnEditorHandler = (evt, id, options, badge) => {
-        ChataUtils.showColumnEditor(id, options, () => {
-            var json = ChataUtils.responses[id];
-            if (showBadge(json)) {
-                badge.style.visibility = 'visible';
-            } else {
-                badge.style.visibility = 'hidden';
-            }
-        });
-    };
-
-    view.onCellClick = (data, json) => {
-        var tableView = new DrilldownView({
-            tile,
-            displayType: 'table',
-            isStatic: false,
-            drilldownFn: view.getDrilldownFn(data, json),
-        });
-
-        const title = view.getQuery();
-
-        view.displayDrilldownModal(title, [tableView]);
+        ChataUtils.showColumnEditor(
+            id,
+            options,
+            () => {
+                var json = ChataUtils.responses[id];
+                if (showBadge(json)) {
+                    badge.style.visibility = 'visible';
+                } else {
+                    badge.style.visibility = 'hidden';
+                }
+            },
+            view.queryOutput,
+        );
     };
 
     view.show = () => {
@@ -182,7 +154,11 @@ export function TileView(tile, isSecond = false) {
     };
 
     view.showSuggestionButtons = (response) => {
-        var items = response.data.items;
+        var items = response?.data?.items;
+        if (!items?.length) {
+            return;
+        }
+
         var relatedJson = ChataUtils.responses[UUID];
         relatedJson.suggestions = response;
         var queryId = relatedJson['data']['query_id'];
@@ -281,80 +257,6 @@ export function TileView(tile, isSecond = false) {
         }
     };
 
-    view.clearFilterMetadata = () => {
-        responseWrapper.filterMetadata = [];
-    };
-
-    view.setDefaultFilters = (table) => {
-        const { filterMetadata } = responseWrapper;
-
-        if (!filterMetadata) return;
-
-        table.toggleFilters();
-        for (var i = 0; i < filterMetadata.length; i++) {
-            var filter = filterMetadata[i];
-            table.setHeaderFilterValue(filter.field, filter.value);
-        }
-        table.toggleFilters();
-    };
-
-    view.checkAutoChartAggregations = (json) => {
-        var groupables = getGroupables(json);
-        const { autoChartAggregations } = dashboard.options;
-
-        if (groupables.length === 1 && autoChartAggregations) {
-            view.internalDisplayType = 'column';
-        }
-
-        if (groupables.length === 2 && autoChartAggregations) {
-            view.internalDisplayType = 'stacked_column';
-        }
-    };
-
-
-    view.getQueryFn = (response) => {
-        let newResponse;
-
-        return async ({ formattedTableParams: undefined, ...args }) => { // todo - formattedTablParams
-            try {
-                const queryRequestData = response?.data?.data?.fe_req;
-                const allFilters = getCombinedFilters(undefined, response, undefined);
-
-                const queryParams = {
-                    ...getAuthentication(dashboard.options.authentication),
-                    ...getAutoQLConfig(dashboard.options.autoQLConfig),
-                    source: 'dashboard.user',
-                    scope: dashboard.options.scope,
-                    debug: queryRequestData?.translation === 'include',
-                    filters: queryRequestData?.session_filter_locks,
-                    pageSize: queryRequestData?.page_size,
-                    groupBys: queryRequestData?.columns,
-                    orders: formattedTableParams?.sorters,
-                    tableFilters: allFilters,
-                };
-
-                  let newResponse = await runQuery({
-                        ...queryParams,
-                        query: queryRequestData?.text,
-                        debug: queryRequestData?.translation === 'include',
-                        userSelection: queryRequestData?.disambiguation,
-                        ...args,
-                    });
-    
-                    if (newResponse?.data) {
-                        newResponse.data.originalQueryID = response.data.data.query_id;
-                        newResponse.data.queryFn = view.getQueryFn(response)
-                    }
-
-            } catch (error) {
-                console.error(error);
-                newResponse = error;
-            }
-
-            return newResponse;
-        };
-    };
-
     view.run = async () => {
         const query = view.getQuery();
 
@@ -362,21 +264,24 @@ export function TileView(tile, isSecond = false) {
         view.isSafetynet = false;
 
         if (query) {
-            view.clearMetadata();
-            view.clearFilterMetadata();
-            var loading = view.showLoading();
+            view.showLoading();
 
             let response;
             try {
-                response = await runQuery({ ...getAuthentication(dashboard.options.authentication), ...getAutoQLConfig(dashboard.options.autoQLConfig), query, source: 'dashboards.user' })
-                if (response?.data) {
-                    response.data.queryFn = view.getQueryFn(response)
-                }
+                response = await runQuery({
+                    ...getAuthentication(dashboard.options.authentication),
+                    ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                    enableQueryValidation: dashboard.options.isEditing,
+                    query,
+                    source: 'dashboards.user',
+                    scope: dashboard.options.scope,
+                    pageSize: dashboard.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE,
+                });
             } catch (error) {
                 response = error;
             }
 
-            const json = response?.data
+            const json = response?.data;
 
             ChataUtils.responses[UUID] = json;
 
@@ -392,9 +297,6 @@ export function TileView(tile, isSecond = false) {
                 if (response.data.reference_id === '1.1.430' || response.data.reference_id === '1.1.431') {
                     view.displaySuggestions();
                 } else {
-                    if (!view.isExecuted) {
-                        view.checkAutoChartAggregations(json);
-                    }
                     view.displayData();
                 }
             } else {
@@ -454,17 +356,8 @@ export function TileView(tile, isSecond = false) {
         return apiCall(val, tile.dashboard.options, 'dashboards.user');
     };
 
-    view.clearMetadata = () => {
-        responseWrapper.metadata = null;
-    };
-
     view.copyFilterMetadata = () => {
         responseWrapper.filterMetadata = responseWrapper.tabulator.getHeaderFilters();
-    };
-
-    view.copyMetadataToDrilldown = (drilldownView) => {
-        drilldownView.metadata = responseWrapper.metadata;
-        drilldownView.metadata3D = responseWrapper.metadata3D;
     };
 
     view.componentClickHandler = (handler, component, selector) => {
@@ -540,7 +433,12 @@ export function TileView(tile, isSecond = false) {
 
                         let response;
                         try {
-                            response = await json.data?.queryFn?.({ tableFilters: allFilters, pageSize });
+                            response = await json.data?.queryFn?.({
+                                ...getAuthentication(dashboard.options.authentication),
+                                ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                                tableFilters: allFilters,
+                                pageSize,
+                            });
                         } catch (error) {
                             console.error(error);
                             return;
@@ -572,54 +470,52 @@ export function TileView(tile, isSecond = false) {
         };
     };
 
-    view.chartElementClick = (data, idRequest) => {
+    view.onDrilldownClick = (data) => {
         const enableDrilldowns = getAutoQLConfig(dashboard.options.autoQLConfig).enableDrilldowns;
         if (!enableDrilldowns) return;
 
-        const json = cloneObject(ChataUtils.responses[idRequest]);
+        const json = view.queryOutput?.options?.queryResponse;
 
         view.activeKey = data.activeKey;
 
-        var tableView = new DrilldownView({
+        const views = [];
+
+        var drilldownView = new DrilldownView({
+            isStatic: false,
+            options: dashboard.options,
             tile,
             displayType: 'table',
-            isStatic: false,
             drilldownFn: view.getDrilldownFn(data, json),
         });
 
-        var chartView = new DrilldownView({
-            tile,
-            displayType: view.internalDisplayType,
-            activeKey: view.activeKey,
-            onClick: (data) => tableView.executeDrilldown(data),
-            json,
-        });
+        views.push(drilldownView);
+
+        var originalView;
+        if (isChartType(view.internalDisplayType)) {
+            originalView = new DrilldownView({
+                options: dashboard.options,
+                tile,
+                displayType: view.internalDisplayType,
+                activeKey: view.activeKey,
+                onClick: (drilldownData) => drilldownView.executeDrilldown(drilldownData),
+                json,
+            });
+
+            views.unshift(originalView);
+        }
 
         const title = view.getQuery();
 
-        view.drilldownModal = view.displayDrilldownModal(title, [chartView, tableView]);
-
-        view.copyMetadataToDrilldown(chartView);
+        view.drilldownModal = view.displayDrilldownModal(title, views, data);
 
         // Wait for modal animation to complete
         setTimeout(() => {
-            chartView.displayData(json);
-        }, 500);
-    };
-
-    view.displaySingleValueDrillDown = (json) => {
-        const data = { groupBys: [], supportedByAPI: true }
-
-        var tableView = new DrilldownView({
-            tile,
-            displayType: 'table',
-            isStatic: false,
-            drilldownFn: view.getDrilldownFn(data, json),
-        });
-
-        const title = view.getQuery();
-
-        view.displayDrilldownModal(title, [tableView]);
+            originalView?.displayData(json);
+            setTimeout(() => {
+                drilldownView.displayData();
+                drilldownView.executeDrilldown(data);
+            }, 100);
+        }, 350);
     };
 
     view.getMessageError = () => {
@@ -645,21 +541,27 @@ export function TileView(tile, isSecond = false) {
         select(window).on('chata-resize.' + UUID, null);
     };
 
+    view.redraw = () => {
+        view.queryOutput?.dispatchResizeEvent?.();
+    };
+
     view.displayData = () => {
         var json = ChataUtils.responses[UUID];
 
-        if (json === undefined) return;
+        if (json === undefined) {
+            view.createToolbars();
+            return;
+        }
 
         view.clearAutoResizeEvents();
 
         if (!json['data'].rows || json['data'].rows.length == 0) {
             responseWrapper.innerHTML = '';
             responseWrapper.appendChild(view.getMessageError());
-            view.createVizToolbar();
+            view.createToolbars();
             return;
         }
 
-        var container = responseWrapper;
         var displayType = view.internalDisplayType;
         var supportedDisplayTypes = getSupportedDisplayTypes({ response: { data: json } });
         if (!supportedDisplayTypes.includes(displayType)) {
@@ -669,85 +571,113 @@ export function TileView(tile, isSecond = false) {
         if (responseWrapper.tabulator) {
             view.copyFilterMetadata();
         }
-        var chartWrapper;
-        var chartWrapper2;
 
         responseWrapper.innerHTML = '';
 
-        if (displayType === 'table') {
-            if (json['data']['columns'].length == 1) {
-                var data = formatData(json['data']['rows'][0][0], json['data']['columns'][0], dashboard.options);
-                var singleValue = htmlToElement(`
-                    <div>
-                        <a class="autoql-vanilla-single-value-response">
-                            ${data}
-                        <a/>
-                    </div>
-                `);
-                container.appendChild(singleValue);
-                singleValue.onclick = () => {
-                    view.displaySingleValueDrillDown(json);
-                };
-            } else {
-                var div = createTableContainer();
-                div.setAttribute('data-componentid', UUID);
-                container.appendChild(div);
-                container.classList.add('autoql-vanilla-chata-table-container');
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                var table = new ChataTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
+        const queryOutput = new QueryOutput(responseWrapper, {
+            authentication: getAuthentication(dashboard.options.authentication),
+            autoQLConfig: getAutoQLConfig(dashboard.options.autoQLConfig),
+            queryResponse: json,
+            displayType,
+            pageSize: 50,
+            onDataClick: view.onDrilldownClick,
+        });
 
-                div.tabulator = table;
-                responseWrapper.tabulator = table;
-                table.parentContainer = view;
-                view.setDefaultFilters(table);
-            }
-        } else if (displayType === 'pivot_table') {
-            var tableContainer = createTableContainer();
-            tableContainer.setAttribute('data-componentid', UUID);
-            container.appendChild(tableContainer);
-            container.classList.add('autoql-vanilla-chata-table-container');
-            var _scrollbox = document.createElement('div');
-            _scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-            _scrollbox.classList.add('no-full-width');
-            _scrollbox.appendChild(tableContainer);
-            container.appendChild(_scrollbox);
-            var _table = new ChataPivotTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
-            tableContainer.tabulator = _table;
-        } else if (CHART_TYPES.includes(displayType)) {
-            chartWrapper = document.createElement('div');
-            chartWrapper.setAttribute('data-componentid', UUID);
-            chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder');
-            chartWrapper2 = document.createElement('div');
-            chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
-            chartWrapper2.appendChild(chartWrapper);
-            container.appendChild(chartWrapper2);
-            new ChataChartNew(chartWrapper, {
-                type: displayType,
-                options: dashboard.options,
-                queryJson: json,
-                onChartClick: (data) => view.chartElementClick(data, UUID),
-            });
+        view.queryOutput = queryOutput;
 
-            // view.registerDrilldownChartEvent(chartWrapper)
+        if (queryOutput) {
+            responseWrapper.appendChild(queryOutput);
         } else {
-            container.innerHTML = "Oops! We didn't understand that query.";
+            responseWrapper.innerHTML = "Oops! We didn't understand that query.";
         }
 
-        view.createVizToolbar();
+        view.createToolbars();
         refreshTooltips();
+
+        return;
     };
 
-    view.createVizToolbar = () => {
-        var json = ChataUtils.responses[UUID];
-        new TileVizToolbar(json, view, tile);
+    view.createSplitViewBtn = () => {
+        var vizToolbarSplit = htmlToElement(`
+            <div 
+                class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn"
+                data-tippy-content="${tile.options.isSplit ? strings.singleView : strings.splitView}">
+            </div>
+        `);
 
-        var actionToolbar = new ActionToolbar(UUID, view, tile);
-        if (!view.isSecond) actionToolbar.classList.add('first');
-        view.appendChild(actionToolbar);
+        var vizToolbarSplitButton = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-toolbar-btn"
+            </button>
+        `);
+
+        var vizToolbarSplitContent = htmlToElement(`
+            <span class="autoql-vanilla-chata-icon" style="color: inherit;">
+                ${tile.options.isSplit ? SPLIT_VIEW_ACTIVE : SPLIT_VIEW}
+            </span>
+        `);
+
+        vizToolbarSplit.appendChild(vizToolbarSplitButton);
+        vizToolbarSplitButton.appendChild(vizToolbarSplitContent);
+        vizToolbarSplit.setAttribute('data-issplit', tile.options.isSplit);
+        vizToolbarSplit.onclick = function () {
+            try {
+                onSplitBtnClick();
+            } catch (error) {
+                console.error(error);
+            }
+
+            const isSplit = this.dataset.isSplit;
+
+            if (isSplit) {
+                vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
+                this.setAttribute('data-tippy-content', strings.singleView);
+            } else {
+                vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
+                this.setAttribute('data-tippy-content', strings.splitView);
+            }
+
+            this.setAttribute('data-issplit', !isSplit);
+            refreshTooltips();
+        };
+
+        return vizToolbarSplit;
+    };
+
+    view.createToolbars = () => {
+        if (view.toolbarContainer) {
+            view.toolbarContainer.innerHTML = '';
+        }
+
+        const toolbarContainer = document.createElement('div');
+        const leftToolbarContainer = document.createElement('div');
+        const rightToolbarContainer = document.createElement('div');
+
+        toolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container');
+        leftToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-left');
+        rightToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-right');
+
+        var json = ChataUtils.responses[UUID];
+
+        const shouldCreateSplitViewBtn = view.isSecond || (!view.isSecond && !tile.options.isSplit);
+
+        const splitViewBtn = shouldCreateSplitViewBtn ? view.createSplitViewBtn() : null;
+        const vizToolbar = new VizToolbar(json, view.queryOutput, tile.dashboard.options);
+        const optionsToolbar = new OptionsToolbar(UUID, view.queryOutput, tile.dashboard.options);
+
+        if (view.isSecond) vizToolbar.classList.add('second');
+        if (view.isSecond) optionsToolbar.classList.add('second');
+
+        if (splitViewBtn) leftToolbarContainer.appendChild(splitViewBtn);
+        if (vizToolbar) leftToolbarContainer.appendChild(vizToolbar);
+        if (optionsToolbar) rightToolbarContainer.appendChild(optionsToolbar);
+
+        toolbarContainer.appendChild(leftToolbarContainer);
+        toolbarContainer.appendChild(rightToolbarContainer);
+
+        view.toolbarContainer = toolbarContainer;
+
+        view.appendChild(toolbarContainer);
     };
 
     view.classList.add('autoql-vanilla-tile-view');

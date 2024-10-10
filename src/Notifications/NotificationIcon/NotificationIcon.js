@@ -1,19 +1,16 @@
 import { NOTIFICATION_BUTTON } from '../../Svg';
-import {
-	apiCallNotificationCount,
-	apiCallPut
-} from '../../Api';
+import { apiCallNotificationCount, apiCallPut } from '../../Api';
 import { checkAndApplyTheme } from '../../Utils';
 
 import './ChataNotificationButton.scss';
 
-export function NotificationIcon(selector, options={}){
-    checkAndApplyTheme()
+export function NotificationIcon(selector, options = {}) {
+    checkAndApplyTheme();
 
-	const NOTIFICATION_POLLING_INTERVAL = 180000
-	var obj = this;
-	this.options = {
-		authentication: {
+    const NOTIFICATION_POLLING_INTERVAL = 180000;
+    var obj = this;
+    this.options = {
+        authentication: {
             token: undefined,
             apiKey: undefined,
             customerId: undefined,
@@ -69,26 +66,30 @@ export function NotificationIcon(selector, options={}){
     badge.style.visibility = 'hidden';
 
     button.onclick = async () => {
-        if (obj.options.clearCountOnClick) {
-            var o = obj.options.authentication;
-            const url = `${o.domain}/autoql/api/v1/data-alerts/notifications?key=${o.apiKey}`;
-            badge.style.visibility = 'hidden';
-            var response = await apiCallPut(
-                url,
-                {
-                    notification_id: null,
-                    state: 'ACKNOWLEDGED',
-                },
-                obj.options,
-            );
+        try {
+            if (obj.options.clearCountOnClick) {
+                var o = obj.options.authentication;
+                const url = `${o.domain}/autoql/api/v1/data-alerts/notifications?key=${o.apiKey}`;
+                badge.style.visibility = 'hidden';
+                var response = await apiCallPut(
+                    url,
+                    {
+                        notification_id: null,
+                        state: 'ACKNOWLEDGED',
+                    },
+                    obj.options,
+                );
 
-            var jsonResponse = response.data;
+                var jsonResponse = response.data;
 
-            if (jsonResponse.message == 'ok') {
-                obj.unacknowledged = 0;
-            } else {
-                obj.options.onErrorCallback(jsonResponse.message);
+                if (jsonResponse.message == 'ok') {
+                    obj.unacknowledged = 0;
+                } else {
+                    obj.options.onErrorCallback(jsonResponse.message);
+                }
             }
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -96,58 +97,75 @@ export function NotificationIcon(selector, options={}){
         switch (option) {
             case 'authentication':
                 obj.setObjectProp('authentication', value);
+                this.poolInterval();
                 break;
             default:
         }
     };
 
     obj.setObjectProp = (key, _obj) => {
-        for (var [keyValue, value] of Object.entries(_obj)) {
-            obj.options[key][keyValue] = value;
+        try {
+            for (var [keyValue, value] of Object.entries(_obj)) {
+                obj.options[key][keyValue] = value;
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
     this.setBadgeValue = (val) => {
-        if (parseInt(val) > 0 && !obj.options.useDot) {
-            badge.style.visibility = 'visible';
-            if (val > obj.options.overflowCount) val = `${obj.options.overflowCount}+`;
-            this.badge.innerHTML = val;
-            this.options.onNewNotification();
-        } else if (parseInt(val) > 0) {
-            badge.style.visibility = 'visible';
+        try {
+            if (parseInt(val) > 0 && !obj.options.useDot) {
+                badge.style.visibility = 'visible';
+                if (val > obj.options.overflowCount) val = `${obj.options.overflowCount}+`;
+                this.badge.innerHTML = val;
+                this.options.onNewNotification();
+            } else if (parseInt(val) > 0) {
+                badge.style.visibility = 'visible';
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
     this.poolInterval = async () => {
-        const { token, apiKey, domain } = this.options.authentication;
+        try {
+            const { token, apiKey, domain } = this.options.authentication;
 
-        if (!token || !apiKey || !domain) return;
+            if (!token || !apiKey || !domain) return;
 
-        var response = await this.getNotificationCount();
-        var data = response?.data?.data;
+            var response = await this.getNotificationCount();
+            var data = response?.data?.data;
 
-        if (!isNaN(data?.unacknowledged)) {
-            obj.unacknowledged = data.unacknowledged;
-        } else {
-            return
-        }
-
-        this.setBadgeValue(obj.unacknowledged);
-        setInterval(async () => {
-            var response = await obj.getNotificationCount(obj.unacknowledged);
-            var data = response.data.data;
-            if (data.unacknowledged) {
+            if (!isNaN(data?.unacknowledged)) {
                 obj.unacknowledged = data.unacknowledged;
-                this.setBadgeValue(obj.unacknowledged);
+            } else {
+                return;
             }
-        }, NOTIFICATION_POLLING_INTERVAL);
+
+            this.setBadgeValue(obj.unacknowledged);
+            setInterval(async () => {
+                var response = await obj.getNotificationCount(obj.unacknowledged);
+                var data = response?.data?.data;
+                if (data?.unacknowledged) {
+                    obj.unacknowledged = data.unacknowledged;
+                    this.setBadgeValue(obj.unacknowledged);
+                }
+            }, NOTIFICATION_POLLING_INTERVAL);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     this.getNotificationCount = async (unacknowledged = 0) => {
-        var o = this.options.authentication;
-        const url = `${o.domain}/autoql/api/v1/data-alerts/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`;
+        try {
+            var o = this.options.authentication;
+            const url = `${o.domain}/autoql/api/v1/data-alerts/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`;
 
-        return apiCallNotificationCount(url, this.options);
+            return apiCallNotificationCount(url, this.options);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     this.poolInterval();

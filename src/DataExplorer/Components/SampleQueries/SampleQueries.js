@@ -90,6 +90,10 @@ export function SampleQueries({
                 if (column?.name && !columns[column.name]) {
                     columns[column.name] = { value: '' };
                 }
+
+                if (column?.alt_name && columns[column.name]) {
+                    columns[column.name].alternative_column_names = [column.alt_name];
+                }
             });
         }
 
@@ -227,6 +231,8 @@ export function SampleQueries({
             });
 
             clearLoading();
+
+            list.innerHTML = '';
 
             const items = sampleQueries?.data?.data?.suggestions;
 

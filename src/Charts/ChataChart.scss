@@ -26,6 +26,36 @@
     }
 }
 
+.autoql-vanilla-data-limit-warning {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 2px 10px;
+    margin-bottom: 3px;
+    border: 1px solid var(--autoql-vanilla-warning-color);
+    border-radius: 3px;
+    letter-spacing: initial;
+    width: 100%;
+
+    .autoql-vanilla-icon {
+        margin-right: 6px;
+        svg {
+            color: var(--autoql-vanilla-warning-color) !important;
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: var(--autoql-vanilla-warning-color);
+        opacity: 0.1;
+    }
+}
+
 .autoql-vanilla-chata-chart-container {
     height: 100vh;
     width: 100vw;
@@ -114,6 +144,7 @@
             line {
                 color: currentColor;
                 shape-rendering: crispedges;
+                opacity: 0.15;
             }
             path {
                 stroke-width: 0;
@@ -184,6 +215,9 @@
 }
 
 .autoql-vanilla-axis-selector-container {
+    max-height: 150px;
+    overflow-y: auto;
+
     .autoql-vanilla-chata-list-item {
         .autoql-vanilla-select {
             font-weight: 600;
