@@ -189,7 +189,7 @@ export function Select({
             }
 
             const listLabelSpan = document.createElement('span');
-            listLabelSpan.innerHTML = listLabel;
+            listLabelSpan.appendChild(listLabel);
 
             li.appendChild(listLabelSpan);
 
