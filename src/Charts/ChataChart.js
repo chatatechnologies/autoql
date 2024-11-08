@@ -99,14 +99,17 @@ export function ChataChart(
 
     this.getData = (rows) => {
         const rowData = rows ?? origRows ?? [];
-
+        const indices1 = this.columnIndexConfig.numberColumnIndices ?? [];
+        const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type)
+            ? this.columnIndexConfig.numberColumnIndices2 ?? []
+            : [];
+        const numberIndices = [...indices1, ...indices2];
         if (!rowData?.length || !columns?.length) {
             return;
         }
 
         if (isDataAggregated) {
             const sortedRows = sortDataByDate(rowData, columns, 'asc');
-
             try {
                 // TODO: pass this data in from parent
                 const {
@@ -636,8 +639,6 @@ export function ChataChart(
     var aggConfig = component.aggConfig;
 
     const indices1 = this.columnIndexConfig.numberColumnIndices ?? [];
-    const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? this.columnIndexConfig.numberColumnIndices2 ?? [] : [];
-    const numberIndices = [...indices1, ...indices2];
     const isDataAggregated = usePivotDataForChart({ data: queryJson });
     const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
 
