@@ -39,8 +39,7 @@ export function PieChartNew(container, params = {}) {
 
     this.onSliceClick = (element, e) => {
         const sliceData = element['__data__']?.data;
-
-        if (!sliceData) {
+        if (!sliceData || sliceData?.value?.isOther) {
             return;
         }
 
@@ -63,7 +62,6 @@ export function PieChartNew(container, params = {}) {
         });
 
         this.activeKey = newActiveKey;
-
         const drilldownData = getDrilldownData({
             row: Object.values(sliceData.value),
             colIndex: numberColumnIndex,
