@@ -5,11 +5,10 @@
     font-weight: 600;
     font-size: 15px;
     color: var(--autoql-vanilla-text-color-primary);
-
 }
 
 .col-visibility-line-item:not(:last-child) {
-    border-bottom: 1px solid hsla(0,0%,82.7%,.29);
+    border-bottom: 1px solid hsla(0, 0%, 82.7%, 0.29);
 }
 
 .col-visibility-line-item {
@@ -19,11 +18,10 @@
     color: var(--autoql-vanilla-text-color-primary);
 }
 
-
 .m-checkbox {
     display: flex !important;
     align-items: center !important;
-    padding: .2rem !important;
+    padding: 0.2rem !important;
     font-weight: normal !important;
     box-sizing: content-box !important;
 }
@@ -54,11 +52,12 @@
     pointer-events: all !important;
 }
 
-.autoql-vanilla-m-checkbox__input.force-margin{
+.autoql-vanilla-m-checkbox__input.force-margin {
     margin: 0px !important;
 }
 
-.chata-drawer .autoql-vanilla-m-checkbox__input:before, .chata-modal-container .autoql-vanilla-m-checkbox__input:before {
+.chata-drawer .autoql-vanilla-m-checkbox__input:before,
+.chata-modal-container .autoql-vanilla-m-checkbox__input:before {
     background: var(--autoql-vanilla-accent-color) !important;
 }
 
@@ -69,26 +68,33 @@
 }
 
 .autoql-vanilla-m-checkbox__input:before {
-    content: " " !important;
+    content: ' ' !important;
     position: absolute !important;
     top: 50% !important;
     right: 50% !important;
     bottom: 50% !important;
     left: 50% !important;
-    -webkit-transition: all .1s !important;
-    transition: all .1s !important;
+    -webkit-transition: all 0.1s !important;
+    transition: all 0.1s !important;
     cursor: pointer !important;
 }
 
-.autoql-vanilla-m-checkbox__input:checked{
-    border-color: var(--autoql-vanilla-accent-color,#26a7df) !important;
+.autoql-vanilla-m-checkbox__input:checked {
+    border-color: var(--autoql-vanilla-accent-color, #26a7df) !important;
 }
 
-.autoql-vanilla-m-checkbox__input:checked + .autoql-vanilla-chata-checkbox-tick{
+.autoql-vanilla-m-checkbox__input:checked + .autoql-vanilla-chata-checkbox-tick {
+    top: 6px !important;
+    color: #fff;
+}
+.autoql-vanilla-m-checkbox__input:checked.autoql-vanilla-m-checkbox__input-header
+    + .autoql-vanilla-chata-checkbox-tick {
+    top: 14px !important;
     color: #fff;
 }
 
-.autoql-vanilla-m-checkbox__input:checked:before, .autoql-vanilla-m-checkbox__input:indeterminate:before {
+.autoql-vanilla-m-checkbox__input:checked:before,
+.autoql-vanilla-m-checkbox__input:indeterminate:before {
     top: 0px !important;
     right: 0px !important;
     bottom: 0px !important;
