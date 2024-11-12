@@ -1,6 +1,6 @@
 {
     "name": "autoql",
-    "version": "3.9.0",
+    "version": "3.9.1",
     "description": "Javascript widget library",
     "main": "build/autoql-min.js",
     "style": "build/autoql.min.css",
@@ -62,7 +62,7 @@
         "webpack-remove-empty-scripts": "^1.0.3"
     },
     "dependencies": {
-        "autoql-fe-utils": "1.6.8",
+        "autoql-fe-utils": "1.6.9",
         "axios": "^1.4.0",
         "d3-array": "^2.3.3",
         "d3-axis": "^1.0.12",
