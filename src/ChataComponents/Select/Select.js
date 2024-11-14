@@ -189,7 +189,11 @@ export function Select({
             }
 
             const listLabelSpan = document.createElement('span');
-            listLabelSpan.innerHTML = listLabel;
+            if (typeof listLabel === 'object') {
+                listLabelSpan.appendChild(listLabel);
+            } else {
+                listLabelSpan.innerHTML = listLabel;
+            }
 
             li.appendChild(listLabelSpan);
 

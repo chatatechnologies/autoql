@@ -117,7 +117,7 @@ function instantiateTabulator(component, tableOptions, table) {
         tabulator.toggleFilters?.();
 
         component.updateScrollSummaryFooter?.();
-
+        component.renderEmptyTable?.();
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);
     });
@@ -293,7 +293,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     }
 
     const json = ChataUtils.responses[idRequest];
-    if (!json?.data?.rows?.length || !json?.data?.columns?.length) {
+    if (!json?.data?.rows?.length && !json?.data?.columns?.length) {
         return;
     }
 
@@ -367,8 +367,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
             const totalRows = queryResponse?.data?.count_rows ?? 0;
             const currentRows = component.getCurrentRowCount();
-
-            if (!!totalRows && !currentRows) {
+            if ((!!totalRows && !currentRows) || totalRows === 0) {
                 return;
             }
 
@@ -377,6 +376,23 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
             const totalRowsFormatted = new Intl.NumberFormat(languageCode, {}).format(totalRows);
 
             component.tableRowCount.textContent = `${strings.scrolledText} ${currentRowsFormatted} / ${totalRowsFormatted} ${strings.rowsText}`;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    component.renderEmptyTable = () => {
+        try {
+            const queryResponse = ChataUtils.responses[idRequest];
+            const totalRows = queryResponse?.data?.count_rows ?? 0;
+            if (totalRows === 0) {
+                if (!component.emptyTableContent) {
+                    const emptyTableContent = document.createElement('div');
+                    emptyTableContent.classList.add('autoql-vanilla-chata-table-empty-table-content');
+                    component.parentElement.appendChild(emptyTableContent);
+                    component.emptyTableContent = emptyTableContent;
+                }
+                component.emptyTableContent.textContent = 'No data matching your query';
+            }
         } catch (error) {
             console.error(error);
         }
