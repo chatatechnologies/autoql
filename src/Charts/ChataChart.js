@@ -38,9 +38,9 @@ import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
 import { Histogram } from './ChataHistogram';
+import { WARNING } from '../Svg';
 
 import './ChataChart.scss';
-import { WARNING } from '../Svg';
 
 export function ChataChart(
     component,
@@ -72,6 +72,18 @@ export function ChataChart(
     if (!origRows?.length || !columns?.length) {
         return null;
     }
+
+    this.getDrawThrottleValue = () => {
+        const dataSize = this.data?.length ?? 0;
+        if (dataSize < 50) {
+            return 30;
+        } else if (dataSize < 250) {
+            return 500;
+        } else if (dataSize < 500) {
+            return 1000;
+        }
+        // This helps the smaller charts render quickly while giving extra time to the larger charts
+    };
 
     this.isColumnIndexConfigValid = () => {
         return isColumnIndexConfigValid({
@@ -155,7 +167,7 @@ export function ChataChart(
                 maxElements = 10;
             }
 
-            return aggregateData({
+            const aggData = aggregateData({
                 data: rowData,
                 columns,
                 numberIndices,
@@ -163,10 +175,22 @@ export function ChataChart(
                 columnIndexConfig: this.columnIndexConfig,
                 maxElements,
             });
+
+            if (aggData?.length > 500) {
+                aggData.splice(500);
+                this.isChartDataLimited = true;
+            }
+
+            return aggData;
         }
 
         if (type == DisplayTypes.PIE) {
             rowData = aggregateOtherCategory(data, columnIndexConfig);
+        }
+
+        if (rowData?.length > 500) {
+            rowData.splice(500);
+            this.isChartDataLimited = true;
         }
 
         return rowData;
@@ -384,7 +408,7 @@ export function ChataChart(
         dataLimitWarningContainer.appendChild(icon);
 
         const warningMessage = document.createElement('span');
-        warningMessage.innerHTML = '<strong>Warning:</strong> Data limit reached!';
+        warningMessage.innerHTML = '<strong>Warning:</strong> Dataset is too large. Please refine your query.';
         dataLimitWarningContainer.appendChild(warningMessage);
 
         this.chartHeaderElement?.node()?.appendChild(dataLimitWarningContainer);
@@ -670,14 +694,51 @@ export function ChataChart(
 
     this.chartHeaderElement = this.chartWrapper.append('div').attr('class', 'autoql-vanilla-chart-header');
 
-    const isDataLimited = queryJson?.data?.rows?.length < queryJson?.data?.count_rows;
+    const isDataLimited = this.isChartDataLimited || queryJson?.data?.rows?.length < queryJson?.data?.count_rows;
     if (isDataLimited) {
         this.renderDataLimitWarning();
     }
 
     this.drawChart();
 
-    select(window).on(`chata-resize-${uuid}`, this.drawChart);
+    this.lastDrawTime = 0;
+    this.throttleDelay = this.getDrawThrottleValue();
+    this.trailingDebounceDelay = 50;
+
+    this.throttleTimeout = null;
+    this.debounceTimeout = null;
+
+    // "Throttled + Debounced Trailing"
+    // (No leading call, throttled during, final call after pause)
+    this.throttledDrawChart = () => {
+        const now = Date.now();
+        const timeSinceLast = now - this.lastDrawTime;
+
+        // ✅ Throttle if enough time has passed since last draw
+        if (timeSinceLast >= this.throttleDelay) {
+            this.drawChart();
+            this.lastDrawTime = now;
+        }
+
+        // ✅ Always schedule trailing debounce
+        if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+
+        this.debounceTimeout = setTimeout(() => {
+            this.drawChart();
+            this.lastDrawTime = Date.now(); // reset throttle timer
+            this.debounceTimeout = null;
+        }, this.trailingDebounceDelay);
+    };
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+            if (entry.target === component) {
+                this.throttledDrawChart();
+            }
+        }
+    });
+
+    this.resizeObserver.observe(component);
 
     return this.svg?.node();
 }

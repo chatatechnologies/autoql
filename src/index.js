@@ -19,6 +19,7 @@ export { NotificationFeed } from './Notifications';
 export { DataAlerts } from './Notifications';
 export { QueryInput } from './QueryInput';
 export { QueryOutput } from './QueryOutput';
+export { ChataChart } from './Charts';
 
 export const configureTheme = (customThemeConfig) => configureThemeUtils(customThemeConfig, CSS_PREFIX);
 export const getSupportedDisplayTypes = (queryResponse) => {
