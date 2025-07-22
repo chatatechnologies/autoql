@@ -74,15 +74,9 @@ export function ChataChart(
     }
 
     this.getDrawThrottleValue = () => {
-        const dataSize = this.data?.length ?? 0;
-        if (dataSize < 50) {
-            return 30;
-        } else if (dataSize < 250) {
-            return 500;
-        } else if (dataSize < 500) {
-            return 1000;
-        }
         // This helps the smaller charts render quickly while giving extra time to the larger charts
+        const dataSize = this.data?.length ?? 0;
+        return dataSize * 2;
     };
 
     this.isColumnIndexConfigValid = () => {
