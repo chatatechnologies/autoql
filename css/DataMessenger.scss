@@ -138,10 +138,6 @@ body.autoql-vanilla-drawer-open-body {
     &.autoql-vanilla-drawer-resizing {
         user-select: none;
         pointer-events: none;
-
-        .autoql-vanilla-chart-content-container {
-            visibility: hidden !important;
-        }
     }
 
     .autoql-vanilla-drawer-mask {
